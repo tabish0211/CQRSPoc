@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CQRSWithMediatR.Controllers
 {
+    
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v{version}/[controller]")]
+    [ApiVersion("1.0")]
     public class ProductController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,6 +19,7 @@ namespace CQRSWithMediatR.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("1")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
         {
             var productId = await _mediator.Send(command);
@@ -24,6 +27,7 @@ namespace CQRSWithMediatR.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1")]
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _mediator.Send(new GetAllProductsQuery());
@@ -31,6 +35,7 @@ namespace CQRSWithMediatR.Controllers
         }
 
         [HttpGet("{id}")]
+        [MapToApiVersion("1")]
         public async Task<IActionResult> Get(int id)
         {
             var product = await _mediator.Send(new GetProductByIdQuery(id));
